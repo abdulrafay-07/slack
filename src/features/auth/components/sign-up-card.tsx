@@ -1,5 +1,7 @@
 import { useState } from "react";
 
+import { useAuthActions } from "@convex-dev/auth/react";
+
 import {
   Card,
   CardContent,
@@ -26,6 +28,12 @@ export const SignUpCard = ({
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+
+  const { signIn } = useAuthActions();
+
+  const onProvider = (value: "google" | "github") => {
+    signIn(value);
+  };
 
   return (
     <Card className="size-full p-8">
@@ -78,7 +86,7 @@ export const SignUpCard = ({
             size="lg"
             variant="outline"
             disabled={false}
-            onClick={() => {}}
+            onClick={() => onProvider("google")}
             className="w-full relative"
           >
             <FcGoogle className="size-5 absolute top-3 left-2.5" />
@@ -88,7 +96,7 @@ export const SignUpCard = ({
             size="lg"
             variant="outline"
             disabled={false}
-            onClick={() => {}}
+            onClick={() => onProvider("github")}
             className="w-full relative"
           >
             <FaGithub className="size-5 absolute top-3 left-2.5" />
