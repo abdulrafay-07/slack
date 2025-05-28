@@ -15,6 +15,7 @@ import { Separator } from "@/components/ui/separator";
 
 import { FcGoogle } from "react-icons/fc";
 import { FaGithub } from "react-icons/fa";
+import { AlertTriangle } from "lucide-react";
 
 import { SignInFlow } from "@/features/auth/types";
 
@@ -27,11 +28,24 @@ export const SignInCard = ({
 }: SignInCardProps) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [pending, setPending] = useState(false);
 
   const { signIn } = useAuthActions();
 
+  const onCredsSignIn = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setPending(true);
+
+    signIn("password", { email, password, flow: "signIn" })
+      .catch(() => setError("Invalid email or password."))
+      .finally(() => setPending(false));
+  };
+
   const onProvider = (value: "google" | "github") => {
-    signIn(value);
+    setPending(true);
+    signIn(value)
+      .finally(() => setPending(false));
   };
 
   return (
@@ -44,10 +58,16 @@ export const SignInCard = ({
           Use your email or another service to continue
         </CardDescription>
       </CardHeader>
+      {error && (
+        <div className="bg-[#B04A4A]/15 p-3 rounded-md flex items-center gap-x-2 text-sm text-[#B04A4A] mb-6">
+          <AlertTriangle className="size-4" />
+          <p>{error}</p>
+        </div>
+      )}
       <CardContent className="space-y-5 px-0 pb-0">
-        <form className="space-y-4">
+        <form onSubmit={onCredsSignIn} className="space-y-4">
           <Input
-            disabled={false}
+            disabled={pending}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Email"
@@ -55,7 +75,7 @@ export const SignInCard = ({
             required
           />
           <Input
-            disabled={false}
+            disabled={pending}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Password"
@@ -66,7 +86,7 @@ export const SignInCard = ({
             size="lg"
             type="submit"
             className="w-full"
-            disabled={false}
+            disabled={pending}
           >
             Continue
           </Button>
@@ -76,7 +96,7 @@ export const SignInCard = ({
           <Button
             size="lg"
             variant="outline"
-            disabled={false}
+            disabled={pending}
             onClick={() => onProvider("google")}
             className="w-full relative"
           >
@@ -86,7 +106,7 @@ export const SignInCard = ({
           <Button
             size="lg"
             variant="outline"
-            disabled={false}
+            disabled={pending}
             onClick={() => onProvider("github")}
             className="w-full relative"
           >
