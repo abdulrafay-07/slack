@@ -38,7 +38,7 @@ export const UserButton = () => {
             src={image}
             alt={name}
           />
-          <AvatarFallback className="bg-primary text-white">
+          <AvatarFallback className="bg-teal-800 text-white">
             {avatarFallback}
           </AvatarFallback>
         </Avatar>
