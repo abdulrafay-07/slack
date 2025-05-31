@@ -18,8 +18,9 @@ export default function Home() {
 
   useEffect(() => {
     if (isLoading) return;
-      router.replace(`/workspace/${workspaceId}`);
+    
     if (workspaceId) {
+      router.replace(`/workspace/${workspaceId}`);
       console.log("redirect to", workspaceId);
     } else if (!open) {
       setOpen(true);
