@@ -52,11 +52,11 @@ export const PreferencesModal = ({
     updateWorkspace({ id: workspaceId, name: value }, {
       onSuccess: () => {
         toast.success("Workspace updated");
+        setOpenEdit(false);
       },
       onError: () => {
         toast.error("Failed to update the workspace");
       },
-      onSettled: () => setOpenEdit(false),
     });
   };
 
@@ -140,7 +140,7 @@ export const PreferencesModal = ({
             <button
               disabled={isDeletingWorkspace}
               onClick={handleDelete}
-              className="flex items-center gap-x-2 px-5 py-4 bg-white rounded-lg border cursor-pointer hover:bg-gray-50 text-rose-600"
+              className="flex items-center gap-x-2 px-5 py-4 bg-white rounded-lg border cursor-pointer hover:bg-gray-50 text-[#B04A4A]"
             >
               <Trash className="size-4" />
               <p className="text-sm font-semibold">
