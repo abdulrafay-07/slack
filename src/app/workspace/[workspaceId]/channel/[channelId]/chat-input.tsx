@@ -7,10 +7,20 @@ import { useChannelId } from "@/hooks/use-channel-id";
 import { useWorkspaceId } from "@/hooks/use-workspace-id";
 
 import { useCreateMessage } from "@/features/messages/api/use-create-message";
+import { useGenerateUploadUrl } from "@/features/upload/api/use-generate-upload-url";
+
+import { Id } from "../../../../../../convex/_generated/dataModel";
 
 import { toast } from "sonner";
 
 const Editor = dynamic(() => import("@/components/editor"), { ssr: false });
+
+type CreateMessageValues = {
+  channelId: Id<"channels">;
+  workspaceId: Id<"workspaces">;
+  body: string;
+  image?: Id<"_storage">;
+};
 
 interface ChatInputProps {
   placeholder: string;
@@ -25,9 +35,10 @@ export const ChatInput = ({
   const channelId = useChannelId();
   const workspaceId = useWorkspaceId();
 
+  const { mutate: generateUploadurl, isPending: generatingUploadUrl } = useGenerateUploadUrl();
   const { mutate: createMessage, isPending: creatingMessage } = useCreateMessage();
 
-  const isPending = creatingMessage;
+  const isPending = creatingMessage || generatingUploadUrl;
 
   const handleSubmit = async ({
     body,
@@ -37,16 +48,39 @@ export const ChatInput = ({
     image: File | null;
   }) => {
     try {
-      await createMessage({
-        workspaceId,
+      editorRef?.current?.enable(false);
+
+      const values: CreateMessageValues = {
         channelId,
+        workspaceId,
         body,
-      }, { throwError: true });
+        image: undefined,
+      };
+
+      if (image) {
+        const url = await generateUploadurl({}, { throwError: true });
+        if (!url) throw new Error("Url not found");
+
+        const result = await fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": image.type },
+          body: image,
+        });
+        if (!result.ok) throw new Error("Failed to upload image");
+
+        const { storageId } = await result.json();
+
+        values.image = storageId;
+      };
+
+      await createMessage(values, { throwError: true });
   
       // reset the input
       setEditorKey(prevKey => prevKey + 1);
     } catch (error) {
       toast.error("Failed to send a message");
+    } finally {
+      editorRef?.current?.enable(true);
     };
   };
 
