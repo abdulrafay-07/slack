@@ -6,8 +6,9 @@ import { format, isToday, isYesterday } from "date-fns";
 
 import { Doc, Id } from "../../convex/_generated/dataModel";
 
-import { Thumbnail } from "@/components/thumbnail";
 import { Hint } from "@/components/hint";
+import { Toolbar } from "@/components/toolbar";
+import { Thumbnail } from "@/components/thumbnail";
 import {
   Avatar,
   AvatarFallback,
@@ -118,6 +119,17 @@ export const Message = ({
           )}
         </div>
       </div>
+      {!isEditing && (
+        <Toolbar
+          isAuthor={isAuthor}
+          isPending={false}
+          handleEdit={() => setEditingId(id)}
+          handleThread={() => {}}
+          handleDelete={() => {}}
+          handleReaction={() => {}}
+          hideThreadButton={hideThreadButton}
+        />
+      )}
     </div>
   )
 };
