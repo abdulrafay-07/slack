@@ -59,6 +59,50 @@ const getMember = async (ctx: QueryCtx, workspaceId: Id<"workspaces">, userId: I
     .unique();
 };
 
+export const update = mutation({
+  args: {
+    id: v.id("messages"),
+    body: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const userId = await getAuthUserId(ctx);
+    if (!userId) throw new Error("Unauthorized");
+
+    const message = await ctx.db.get(args.id);
+    if (!message) throw new Error("No message found");
+
+    const member = await getMember(ctx, message.workspaceId, userId);
+    if (!member || member._id !== message.memberId) throw new Error("Unauthorize");
+
+    await ctx.db.patch(args.id, {
+      body: args.body,
+      updatedAt: Date.now(),
+    });
+
+    return args.id;
+  },
+});
+
+export const remove = mutation({
+  args: {
+    id: v.id("messages"),
+  },
+  handler: async (ctx, args) => {
+    const userId = await getAuthUserId(ctx);
+    if (!userId) throw new Error("Unauthorized");
+
+    const message = await ctx.db.get(args.id);
+    if (!message) throw new Error("No message found");
+
+    const member = await getMember(ctx, message.workspaceId, userId);
+    if (!member || member._id !== message.memberId) throw new Error("Unauthorize");
+
+    await ctx.db.delete(args.id);
+
+    return args.id;
+  },
+});
+
 export const get = query({
   args: {
     channelId: v.optional(v.id("channels")),
