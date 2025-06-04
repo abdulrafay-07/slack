@@ -72,7 +72,7 @@ export const update = mutation({
     if (!message) throw new Error("No message found");
 
     const member = await getMember(ctx, message.workspaceId, userId);
-    if (!member || member._id !== message.memberId) throw new Error("Unauthorize");
+    if (!member || member._id !== message.memberId) throw new Error("Unauthorized");
 
     await ctx.db.patch(args.id, {
       body: args.body,

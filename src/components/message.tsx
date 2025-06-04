@@ -11,11 +11,13 @@ import { useConfirm } from "@/hooks/use-confirm";
 
 import { useUpdateMessage } from "@/features/messages/api/use-update-message";
 import { useDeleteMessage } from "@/features/messages/api/use-delete-message";
+import { useToggleReaction } from "@/features/reactions/api/use-toggle-reaction";
 
 import { toast } from "sonner";
 import { Hint } from "@/components/hint";
 import { Toolbar } from "@/components/toolbar";
 import { Thumbnail } from "@/components/thumbnail";
+import { Reactions } from "@/components/reactions";
 import {
   Avatar,
   AvatarFallback,
@@ -77,8 +79,9 @@ export const Message = ({
 
   const { mutate: updateMessage, isPending: updatingMessage } = useUpdateMessage();
   const { mutate: deleteMessage, isPending: deletingMessage } = useDeleteMessage();
+  const { mutate: toggleReaction, isPending: togglingReaction } = useToggleReaction();
 
-  const isPending = updatingMessage || deletingMessage;
+  const isPending = updatingMessage || deletingMessage || togglingReaction;
 
   const avatarFallback = authorName.charAt(0).toUpperCase();
 
@@ -106,6 +109,14 @@ export const Message = ({
         toast.error("Failed to delete the message");
       },
     })
+  };
+
+  const handleReaction = (value: string) => {
+    toggleReaction({ messageId: id, value }, {
+      onError: () => {
+        toast.error("Failed to toggle the reaction");
+      },
+    });
   };
 
   if (isCompact) {
@@ -142,6 +153,10 @@ export const Message = ({
                 {updatedAt && (
                   <span className="text-xs text-muted-foreground">(edited)</span>
                 )}
+                <Reactions
+                  data={reactions}
+                  onChange={handleReaction}
+                />
               </div>
             )}
           </div>
@@ -152,7 +167,7 @@ export const Message = ({
               handleEdit={() => setEditingId(id)}
               handleThread={() => {}}
               handleDelete={handleDelete}
-              handleReaction={() => {}}
+              handleReaction={handleReaction}
               hideThreadButton={hideThreadButton}
             />
           )}
@@ -213,6 +228,10 @@ export const Message = ({
               {updatedAt && (
                 <span className="text-xs text-muted-foreground">(edited)</span>
               )}
+              <Reactions
+                data={reactions}
+                onChange={handleReaction}
+              />
             </div>
           )}
         </div>
@@ -223,7 +242,7 @@ export const Message = ({
             handleEdit={() => setEditingId(id)}
             handleThread={() => {}}
             handleDelete={handleDelete}
-            handleReaction={() => {}}
+            handleReaction={handleReaction}
             hideThreadButton={hideThreadButton}
           />
         )}
