@@ -16,6 +16,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
+import { useMutationHelper } from "@/lib/mutation";
+
+import { api } from "../../../../convex/_generated/api";
+
 export const CreateChannelModal = () => {
   const router = useRouter();
 
@@ -23,7 +27,7 @@ export const CreateChannelModal = () => {
   const [open, setOpen] = useCreateChannelModal();
   
   const workspaceId = useWorkspaceId();
-  const { mutate, isPending } = useCreateChannel();
+  const { mutate, isPending } = useMutationHelper(api.channels.create);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/\s+/g, "-").toLowerCase();

@@ -14,12 +14,16 @@ import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
+import { useMutationHelper } from "@/lib/mutation";
+
+import { api } from "../../../../convex/_generated/api";
+
 export const CreateWorkspaceModal = () => {
   const [name, setName] = useState("");
   const router = useRouter();
 
   const [open, setOpen] = useCreateWorkspaceModal();
-  const { mutate, isPending } = useCreateWorkspace();
+  const { mutate, isPending } = useMutationHelper(api.workspaces.create);
 
   const handleClose = () => {
     setOpen(false);

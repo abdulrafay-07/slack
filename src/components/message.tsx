@@ -25,6 +25,9 @@ import {
 } from "@/components/ui/avatar";
 
 import { cn } from "@/lib/utils";
+import { useMutationHelper } from "@/lib/mutation";
+
+import { api } from "../../convex/_generated/api";
 
 interface MessageProps {
   id: Id<"messages">;
@@ -77,9 +80,9 @@ export const Message = ({
     "This will delete the message permanently.",
   );
 
-  const { mutate: updateMessage, isPending: updatingMessage } = useUpdateMessage();
-  const { mutate: deleteMessage, isPending: deletingMessage } = useDeleteMessage();
-  const { mutate: toggleReaction, isPending: togglingReaction } = useToggleReaction();
+  const { mutate: updateMessage, isPending: updatingMessage } = useMutationHelper(api.messages.update);
+  const { mutate: deleteMessage, isPending: deletingMessage } = useMutationHelper(api.messages.remove);
+  const { mutate: toggleReaction, isPending: togglingReaction } = useMutationHelper(api.reactions.toggle);
 
   const isPending = updatingMessage || deletingMessage || togglingReaction;
 

@@ -13,6 +13,10 @@ import { Id } from "../../../../../../convex/_generated/dataModel";
 
 import { toast } from "sonner";
 
+import { useMutationHelper } from "@/lib/mutation";
+
+import { api } from "../../../../../../convex/_generated/api";
+
 const Editor = dynamic(() => import("@/components/editor"), { ssr: false });
 
 type CreateMessageValues = {
@@ -36,7 +40,7 @@ export const ChatInput = ({
   const workspaceId = useWorkspaceId();
 
   const { mutate: generateUploadurl, isPending: generatingUploadUrl } = useGenerateUploadUrl();
-  const { mutate: createMessage, isPending: creatingMessage } = useCreateMessage();
+  const { mutate: createMessage, isPending: creatingMessage } = useMutationHelper(api.messages.create);
 
   const isPending = creatingMessage || generatingUploadUrl;
 

@@ -25,6 +25,10 @@ import { Button } from "@/components/ui/button";
 import { Trash } from "lucide-react";
 import { FaChevronDown } from "react-icons/fa";
 
+import { useMutationHelper } from "@/lib/mutation";
+
+import { api } from "../../../../../../convex/_generated/api";
+
 interface HeaderProps {
   channelName: string;
 };
@@ -45,8 +49,8 @@ export const Header = ({
   const channelId = useChannelId();
 
   const { data: member } = useCurrentMember({ workspaceId });
-  const { mutate: updateChannel, isPending: updatingChannel } = useUpdateChannel();
-  const { mutate: deleteChannel, isPending: deletingChannel } = useDeleteChannel();
+  const { mutate: updateChannel, isPending: updatingChannel } = useMutationHelper(api.channels.update);
+  const { mutate: deleteChannel, isPending: deletingChannel } = useMutationHelper(api.channels.remove);
 
   const handleOpen = (value: boolean) => {
     if (member?.role !== "admin") return;

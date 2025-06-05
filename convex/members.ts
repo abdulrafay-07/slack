@@ -1,12 +1,8 @@
 import { v } from "convex/values";
 import { getAuthUserId } from "@convex-dev/auth/server";
 
-import { Id } from "./_generated/dataModel";
-import { query, QueryCtx } from "./_generated/server";
-
-const populateUser = async (ctx: QueryCtx, id: Id<"users">) => {
-  return await ctx.db.get(id);
-};
+import { query } from "./_generated/server";
+import { populateUser } from "../src/lib/db-utils";
 
 export const current = query({
   args: { workspaceId: v.id("workspaces") },

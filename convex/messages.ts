@@ -2,6 +2,8 @@ import { v } from "convex/values";
 import { getAuthUserId } from "@convex-dev/auth/server";
 import { paginationOptsValidator } from "convex/server";
 
+import { getMember, populateUser } from "../src/lib/db-utils";
+
 import { Doc, Id } from "./_generated/dataModel";
 import { mutation, query, QueryCtx } from "./_generated/server";
 
@@ -44,19 +46,8 @@ const populateReactions = async (ctx: QueryCtx, messageId: Id<"messages">) => {
     .collect();
 };
 
-const populateUser = async (ctx: QueryCtx, userId: Id<"users">) => {
-  return await ctx.db.get(userId);
-};
-
 const populateMember = async (ctx: QueryCtx, memberId: Id<"members">) => {
   return await ctx.db.get(memberId);
-};
-
-const getMember = async (ctx: QueryCtx, workspaceId: Id<"workspaces">, userId: Id<"users">) => {
-  return ctx.db
-    .query("members")
-    .withIndex("by_workspace_id_user_id", (q) => q.eq("workspaceId", workspaceId).eq("userId", userId))
-    .unique();
 };
 
 export const update = mutation({

@@ -17,6 +17,9 @@ import VerificationInput from "react-verification-input";
 import { Loader } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import { useMutationHelper } from "@/lib/mutation";
+
+import { api } from "../../../../convex/_generated/api";
 
 export default function JoinWorkspaceIdPage() {
   const router = useRouter();
@@ -24,7 +27,7 @@ export default function JoinWorkspaceIdPage() {
   const workspaceId = useWorkspaceId();
 
   const { data, isLoading } = useGetInfoById({ id: workspaceId });
-  const { mutate, isPending } = useJoinWorkspace();
+  const { mutate, isPending } = useMutationHelper(api.workspaces.join);
 
   const isMember = useMemo(() => data?.isMember,[data?.isMember]);
   useEffect(() => {

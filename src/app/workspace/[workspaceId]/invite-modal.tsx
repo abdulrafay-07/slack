@@ -15,6 +15,10 @@ import {
 import { Button } from "@/components/ui/button";
 import { Copy, RefreshCcw } from "lucide-react";
 
+import { useMutationHelper } from "@/lib/mutation";
+
+import { api } from "../../../../convex/_generated/api";
+
 interface InviteModalProps {
   open: boolean;
   setOpen: (open: boolean) => void;
@@ -34,7 +38,7 @@ export const InviteModal = ({
     "This will remove the current invite code and generate the new one.",
   );
 
-  const { mutate, isPending } = useNewJoinCode();
+  const { mutate, isPending } = useMutationHelper(api.workspaces.newJoinCode);
 
   const handleCopy = () => {
     const inviteLink = `${window.location.origin}/join/${workspaceId}`;

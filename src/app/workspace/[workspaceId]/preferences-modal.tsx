@@ -21,6 +21,10 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Trash } from "lucide-react";
 
+import { useMutationHelper } from "@/lib/mutation";
+
+import { api } from "../../../../convex/_generated/api";
+
 interface PreferencesModalProps {
   open: boolean;
   setOpen: (open: boolean) => void;
@@ -43,8 +47,8 @@ export const PreferencesModal = ({
     "This action is irreversible"
   );
 
-  const { mutate: updateWorkspace, isPending: isUpdatingWorkspace } = useUpdateWorkspace();
-  const { mutate: deleteWorkspace, isPending: isDeletingWorkspace } = useDeleteWorkspace();
+  const { mutate: updateWorkspace, isPending: isUpdatingWorkspace } = useMutationHelper(api.workspaces.update);
+  const { mutate: deleteWorkspace, isPending: isDeletingWorkspace } = useMutationHelper(api.workspaces.remove);
 
   const handleEdit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
