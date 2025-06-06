@@ -1,15 +1,8 @@
 import { v } from "convex/values";
 import { getAuthUserId } from "@convex-dev/auth/server";
 
-import { Id } from "./_generated/dataModel";
 import { mutation, QueryCtx } from "./_generated/server";
-
-const getMember = async (ctx: QueryCtx, workspaceId: Id<"workspaces">, userId: Id<"users">) => {
-  return ctx.db
-    .query("members")
-    .withIndex("by_workspace_id_user_id", (q) => q.eq("workspaceId", workspaceId).eq("userId", userId))
-    .unique();
-};
+import { getMember } from "../src/lib/db-utils";
 
 export const toggle = mutation({
   args: { messageId: v.id("messages"), value: v.string() },

@@ -11,6 +11,7 @@ import { GetMessagesReturnType } from "@/features/messages/api/use-get-messages"
 
 import { Message } from "@/components/message";
 import { ChannelHero } from "@/components/channel-hero";
+import { ConversationHero } from "@/components/conversation-hero";
 import { Loader } from "lucide-react";
 
 import { formatDateLabel } from "@/lib/utils";
@@ -133,6 +134,12 @@ export const MessageList = ({
         <ChannelHero
           name={channelName}
           creationTime={channelCreationTime}
+        />
+      )}
+      {variant === "conversation" && memberName && (
+        <ConversationHero
+          name={memberName}
+          image={memberImage}
         />
       )}
     </div>

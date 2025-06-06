@@ -2,7 +2,7 @@ import { v } from "convex/values";
 import { getAuthUserId } from "@convex-dev/auth/server";
 
 import { query } from "./_generated/server";
-import { populateUser } from "../src/lib/db-utils";
+import { getMember, populateUser } from "../src/lib/db-utils";
 
 export const current = query({
   args: { workspaceId: v.id("workspaces") },
@@ -17,6 +17,28 @@ export const current = query({
     if (!member) return null;
 
     return member;
+  },
+});
+
+export const getById = query({
+  args: { id: v.id("members") },
+  handler: async (ctx, args) => {
+    const userId = await getAuthUserId(ctx);
+    if (!userId) return null;
+
+    const member = await ctx.db.get(args.id);
+    if (!member) return null;
+
+    const currentMember = await getMember(ctx, member.workspaceId, userId);
+    if (!currentMember) return null;
+
+    const user = await populateUser(ctx, member.userId);
+    if (!user) return null;
+
+    return {
+      ...member,
+      user,
+    };
   },
 });
 
