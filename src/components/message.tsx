@@ -7,6 +7,7 @@ import { format, isToday, isYesterday } from "date-fns";
 
 import { Doc, Id } from "../../convex/_generated/dataModel";
 
+import { usePanel } from "@/hooks/use-panel";
 import { useConfirm } from "@/hooks/use-confirm";
 
 import { toast } from "sonner";
@@ -71,6 +72,7 @@ export const Message = ({
   threadImage,
   threadTimestamp,
 }: MessageProps) => {
+  const { parentMessageId, onOpenMessage, onCloseMessage } = usePanel();
   const [ConfirmDialog, confirm] = useConfirm(
     "Are you sure?",
     "This will delete the message permanently.",
@@ -103,6 +105,8 @@ export const Message = ({
     deleteMessage({ id }, {
       onSuccess: () => {
         toast.success("Message deleted");
+
+        if (parentMessageId === id) onCloseMessage();
       },
       onError: () => {
         toast.error("Failed to delete the message");
@@ -164,7 +168,7 @@ export const Message = ({
               isAuthor={isAuthor}
               isPending={isPending}
               handleEdit={() => setEditingId(id)}
-              handleThread={() => {}}
+              handleThread={() => onOpenMessage(id)}
               handleDelete={handleDelete}
               handleReaction={handleReaction}
               hideThreadButton={hideThreadButton}
@@ -239,7 +243,7 @@ export const Message = ({
             isAuthor={isAuthor}
             isPending={isPending}
             handleEdit={() => setEditingId(id)}
-            handleThread={() => {}}
+            handleThread={() => onOpenMessage(id)}
             handleDelete={handleDelete}
             handleReaction={handleReaction}
             hideThreadButton={hideThreadButton}
