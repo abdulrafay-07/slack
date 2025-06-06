@@ -8,7 +8,6 @@ import { useRouter } from "next/navigation";
 import { useWorkspaceId } from "@/hooks/use-workspace-id";
 
 import { useGetInfoById } from "@/features/workspaces/api/use-get-info-by-id";
-import { useJoinWorkspace } from "@/features/workspaces/api/use-join-workspace";
 
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";

@@ -4,9 +4,6 @@ import { useRouter } from "next/navigation";
 import { useConfirm } from "@/hooks/use-confirm";
 import { useWorkspaceId } from "@/hooks/use-workspace-id";
 
-import { useUpdateWorkspace } from "@/features/workspaces/api/use-update-workspace";
-import { useDeleteWorkspace } from "@/features/workspaces/api/use-delete-workspace";
-
 import {
   Dialog,
   DialogContent,

@@ -9,10 +9,6 @@ import { Doc, Id } from "../../convex/_generated/dataModel";
 
 import { useConfirm } from "@/hooks/use-confirm";
 
-import { useUpdateMessage } from "@/features/messages/api/use-update-message";
-import { useDeleteMessage } from "@/features/messages/api/use-delete-message";
-import { useToggleReaction } from "@/features/reactions/api/use-toggle-reaction";
-
 import { toast } from "sonner";
 import { Hint } from "@/components/hint";
 import { Toolbar } from "@/components/toolbar";

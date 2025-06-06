@@ -3,7 +3,6 @@ import { useRouter } from "next/navigation";
 
 import { useWorkspaceId } from "@/hooks/use-workspace-id";
 
-import { useCreateChannel } from "@/features/channels/api/use-create-channel";
 import { useCreateChannelModal } from "@/features/channels/store/use-create-channel-modal";
 
 import { toast } from "sonner";

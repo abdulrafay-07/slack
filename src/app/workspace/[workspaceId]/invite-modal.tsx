@@ -1,8 +1,6 @@
 import { useConfirm } from "@/hooks/use-confirm";
 import { useWorkspaceId } from "@/hooks/use-workspace-id";
 
-import { useNewJoinCode } from "@/features/workspaces/api/use-new-join-code";
-
 import { toast } from "sonner";
 import {
   Dialog,
