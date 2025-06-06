@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { differenceInMinutes, format, isToday, isYesterday } from "date-fns";
+import { differenceInMinutes, format } from "date-fns";
 
 import { Id } from "../../convex/_generated/dataModel";
 
@@ -12,6 +12,8 @@ import { GetMessagesReturnType } from "@/features/messages/api/use-get-messages"
 import { Message } from "@/components/message";
 import { ChannelHero } from "@/components/channel-hero";
 import { Loader } from "lucide-react";
+
+import { formatDateLabel } from "@/lib/utils";
 
 const TIME_THRESHOLD = 5;
 
@@ -25,15 +27,6 @@ interface MessageListProps {
   loadMore: () => void;
   isLoadingMore: boolean;
   canLoadMore: boolean;
-};
-
-const formatDateLabel = (dateStr: string) => {
-  const date = new Date(dateStr);
-
-  if (isToday(date)) return "Today";
-  if (isYesterday(date)) return "Yesterday";
-
-  return format(date, "EEEE, MMMM d")
 };
 
 export const MessageList = ({
