@@ -7,7 +7,7 @@ import { getMember, populateUser } from "../src/lib/db-utils";
 import { Doc, Id } from "./_generated/dataModel";
 import { mutation, query, QueryCtx } from "./_generated/server";
 
-const populatedThread = async (ctx: QueryCtx, messageId: Id<"messages">) => {
+const populateThread = async (ctx: QueryCtx, messageId: Id<"messages">) => {
   const messages = await ctx.db
     .query("messages")
     .withIndex("by_parent_message_id", (q) => q.eq("parentMessageId", messageId))
@@ -17,6 +17,7 @@ const populatedThread = async (ctx: QueryCtx, messageId: Id<"messages">) => {
       count: 0,
       image: undefined,
       timestamp: 0,
+      name: "",
     };
   };
 
@@ -27,6 +28,7 @@ const populatedThread = async (ctx: QueryCtx, messageId: Id<"messages">) => {
       count: 0,
       image: undefined,
       timestamp: 0,
+      name: "",
     };
   };
 
@@ -36,6 +38,7 @@ const populatedThread = async (ctx: QueryCtx, messageId: Id<"messages">) => {
     count: messages.length,
     image: lastMessageUser?.image,
     timestamp: lastMessage?._creationTime,
+    name: lastMessageUser?.name,
   };
 };
 
@@ -194,7 +197,7 @@ export const get = query({
             if (!member || !user) return null;
 
             const reactions = await populateReactions(ctx, message._id);
-            const thread = await populatedThread(ctx, message._id);
+            const thread = await populateThread(ctx, message._id);
             const image = message.image
               ? await ctx.storage.getUrl(message.image)
               : undefined;
@@ -234,6 +237,7 @@ export const get = query({
               threadCount: thread.count,
               threadImage: thread.image,
               threadTimestamp: thread.timestamp,
+              threadName: thread.name,
             };
           }),
         )

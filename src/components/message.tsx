@@ -15,6 +15,7 @@ import { Hint } from "@/components/hint";
 import { Toolbar } from "@/components/toolbar";
 import { Thumbnail } from "@/components/thumbnail";
 import { Reactions } from "@/components/reactions";
+import { ThreadBar } from "@/components/thread-bar";
 import {
   Avatar,
   AvatarFallback,
@@ -47,6 +48,7 @@ interface MessageProps {
   threadCount?: number;
   threadImage?: string;
   threadTimestamp?: number;
+  threadName?: string;
 };
 
 const formatFullTime = (date: Date) => {
@@ -71,6 +73,7 @@ export const Message = ({
   threadCount,
   threadImage,
   threadTimestamp,
+  threadName,
 }: MessageProps) => {
   const { parentMessageId, onOpenMessage, onCloseMessage } = usePanel();
   const [ConfirmDialog, confirm] = useConfirm(
@@ -160,6 +163,13 @@ export const Message = ({
                   data={reactions}
                   onChange={handleReaction}
                 />
+                <ThreadBar
+                  count={threadCount}
+                  image={threadImage}
+                  timestamp={threadTimestamp}
+                  name={threadName}
+                  onClick={() => onOpenMessage(id)}
+                />
               </div>
             )}
           </div>
@@ -234,6 +244,13 @@ export const Message = ({
               <Reactions
                 data={reactions}
                 onChange={handleReaction}
+              />
+              <ThreadBar
+                count={threadCount}
+                image={threadImage}
+                timestamp={threadTimestamp}
+                name={threadName}
+                onClick={() => onOpenMessage(id)}
               />
             </div>
           )}
